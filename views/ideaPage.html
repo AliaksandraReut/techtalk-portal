@@ -1,0 +1,45 @@
+
+<div id="ideaWithCommentsBlock" style="display: block;" ng-controller="commentsController">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="ideaCommentsContainer">
+            <div class="commentIdeaAvatar">
+                <div class="bigAvatar">
+                    <img src="https://upsa.epam.com/workload/photo/4060741400007677342">
+                </div>
+            </div>
+            <a href="#/" class="closePopup"></a>
+            <div class="ideaContainerWrapper">
+                <p class="ideaContent">
+                    {{ideaWithComment.ideaText}}
+                </p>
+
+                <div class="socialBlock clearfix">
+                    <span class="likePic voted">{{ideaWithComment.likes.length}}</span>
+                </div>
+                <div class="commentsBlock">
+                    <div class="comment" ng-repeat="comment in ideaWithComment.comments">
+                        <div class="smallAvatar">
+                            <img src="https://upsa.epam.com/workload/photo/4000741400006795239">
+                        </div>
+                        <div class="author">
+                            {{comment.author}}
+                        </div>
+                        <div class="commentContent">
+                            {{comment.comment}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="addCommentBlock">
+                <form ng-submit="addComment()">
+                    <div class="addCommentInput">
+                        <input type="text" ng-model="commentText" placeholder="Комментарий">
+                        <button type="submit" value="" class="commentSubmitButton"></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
