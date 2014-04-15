@@ -15,10 +15,10 @@
                 </p>
 
                 <div class="socialBlock clearfix">
-                    <span class="likePic voted">{{ideaWithComment.likes.length}}</span>
+                    <span class="likePic voted" ng-click="toggleLike($event)">{{ideaWithComment.likes.length}}</span>
                 </div>
                 <div class="commentsBlock">
-                    <div class="comment" ng-repeat="comment in ideaWithComment.comments">
+                    <div class="comment" ng-repeat="comment in ideaWithComment.comments" ng-click="removeComment($index)">
                         <div class="smallAvatar">
                             <img src="https://upsa.epam.com/workload/photo/4000741400006795239">
                         </div>
@@ -26,7 +26,7 @@
                             {{comment.author}}
                         </div>
                         <div class="commentContent">
-                            {{comment.comment}}
+                            {{comment.commentText}}
                         </div>
                     </div>
                 </div>

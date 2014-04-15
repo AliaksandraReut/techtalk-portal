@@ -18,6 +18,8 @@ var User = require('./models/User.js').User;
 var Idea= require('./models/Idea.js').Idea;
 var Comment= require('./models/Comment.js').Comment;
 
+var admins = ["4060741400005862684"]; // Nadzeya Shedava
+
 //config
 app
     .disable('x-powered-by')
@@ -436,7 +438,40 @@ app.delete('/api/news/:id', function(req, res) {
 
 
 //My posts
-app.post('/api/ideas', function(req, res) {
+app.get('/api/tt', function(req, res) {
+    console.log('/api/tt'.cyan);
+    var data = JSON.parse(fs.readFileSync('./techtalk.json', 'utf8'));
+    console.log('\t>> data'.grey, data);
+    res.json(data);
+});
+
+app.get('/api/ideas', function(req, res) {
+    console.log('/api/ideas'.cyan, req.query);
+
+    Idea
+        .find()
+        .exec(function(err, results) {
+            if (err) return res.send(err);
+            console.log('\t>> result'.grey, results);
+            res.json(results);
+        });
+});
+
+app.get('/api/ideas/:id', function(req, res) {
+    console.log('/api/ideas/:id'.cyan, req.params.id);
+    var id = req.params.id;
+
+    Idea
+        .findOne({ _id: id })
+        .populate('comments')
+        .exec(function(err, result) {
+            if (err) return res.send(err);
+            console.log('\t>> result'.grey, result);
+            res.json(result);
+        });
+});
+
+app.post('/api/ideas', checkAuth, function(req, res) {
     console.log('/api/idea'.cyan, req.body);
     Idea.create(req.body, function(err, result) {
         if (err) return res.send(err);
@@ -445,43 +480,107 @@ app.post('/api/ideas', function(req, res) {
     });
 });
 
-app.get('/api/ideas', function(req, res) {
-    console.log('/api/ideas'.cyan, req.query);
-   /* var page = req.query.page;*/
+app.get('/api/comment', function(req, res) {
+    console.log('/api/comment?ideaId'.cyan, req.query.ideaId);
+    var id = req.query.ideaId;
 
     Idea
-        .find({})
-        .exec(function(err, results) {
-            if (err) return res.send(err);
-            console.log('\t>> result'.grey, results);
-            res.json(results);
-        });
-});
-app.get('/api/ideas/:id', function(req, res) {
-    console.log('/api/ideas/:id'.cyan, req.params.id);
-    var id = req.params.id;
-
-    Idea
-        .find({ _id: id }, function(err, result) {
+        .findOne({ _id: id })
+        .populate('comments')
+        .exec(function(err, result) {
             if (err) return res.send(err);
             console.log('\t>> result'.grey, result);
-            res.json(result[0]);
+            res.json(result.comments);
         });
 });
 
-app.post('/api/comment', function(req, res){
+app.post('/api/comment', checkAuth, function(req, res){
     console.log('/api/comment'.cyan, req.body);
-    Comment.create(req.body, function(err, result) {
-        console.log("Error");
+    var ideaId = req.body.idea;
+    // Create comment
+    Comment.create(req.body, function(err, newComment) {
         if (err) return res.send(err);
-        console.log('\t>> results'.grey, result);
-        res.json(result);
+        // Find idea to add comment in array
+        Idea.findOne({_id: ideaId}, function(err, idea) {
+            if (err) return res.send(err);
+            idea.comments.push(newComment._id);
+            // Save changed idea
+            idea.save(function(err) {
+                if (err) return res.send(err);
+                console.log('\t>> result'.grey, newComment);
+                res.json(newComment);
+            });
+        });
+    });
+});
+
+app.delete('/api/comment/:commentId', checkAuth, function(req, res){
+    console.log('/api/comment/:commentId'.cyan, req.params.commentId);
+    var commentId = req.params.commentId,
+        ideaId, findBy;
+
+    findBy = {_id: commentId};
+    if (!~admins.indexOf(req.session.user._id)) {
+        findBy.author = req.session.user._id;
+    }
+
+    // Find comment to get ideaId
+    Comment.findOne(findBy, function(err, comment) {
+        if (err) return res.send(err);
+        ideaId = comment.idea;
+        // Find idea to delete commentId from array
+        Idea.findOne({_id: ideaId}, function(err, idea) {
+            if (err) return res.send(err);
+            var ind = idea.comments.indexOf(commentId);
+            idea.comments.splice(ind, 1);
+            // Save changed idea
+            idea.save(function(err) {
+                if (err) return res.send(err);
+                // Remove comment
+                Comment.remove({_id: ideaId}, function(err) {
+                    if (err) return res.send(err);
+                    console.log('\t>> result'.grey, idea);
+                    res.json(idea);
+                });
+            });
+        });
+    });
+});
+
+app.post('/api/like', checkAuth, function(req, res){
+    console.log('/api/like'.cyan, req.body);
+    var ideaId = req.body.ideaId,
+        authorId = req.session.user._id;
+    Idea.findOne({_id: ideaId}, function(err, idea) {
+        if (err) return res.send(err);
+        idea.likes.push(authorId);
+        idea.save(function(err) {
+            if (err) return res.send(err);
+            console.log('\t>> result'.grey, idea);
+            res.json(idea);
+        });
+    });
+});
+
+app.delete('/api/like', checkAuth, function(req, res){
+    console.log('/api/like?ideaId'.cyan, req.query.ideaId);
+    var ideaId = req.query.ideaId,
+        authorId = req.session.user._id;
+    Idea.findOne({_id: ideaId}, function(err, idea) {
+        if (err) return res.send(err);
+        var ind = idea.likes.indexOf(authorId);
+        idea.likes.splice(ind, 1);
+        idea.save(function(err) {
+            if (err) return res.send(err);
+            console.log('\t>> result'.grey, idea);
+            res.json(idea);
+        });
     });
 });
 
 //handling routes on client
 app.all('*', function(req, res) {
-    res.render('homePage');
+    res.render('index1');
 });
 
 //server starts here
