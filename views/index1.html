@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-ng-app="tp" data-ng-controller="AppCtrl">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title data-ng-bind="global.pageTitle">TechTalk portal</title>
+  <link rel="stylesheet" type="text/css" href="/css1/reset.css"/>
+  <link rel="stylesheet" type="text/css" href="/css1/style.css"/>
+  <script src="/js/pace.js"></script>
+  <!-- we probably need more control here -->
+  <base href="/portal"></base>
+</head>
+<body>
+  <header>
+      <form class="form-inline pull-right" role="form"
+          data-ng-if="!global.isAuthN && !authInProgress"
+          data-ng-submit="signin();">
+          <div class="form-group">
+              <label class="sr-only" for="exampleInputEmail2">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email"
+                required
+                data-ng-model="auth.login">
+          </div>
+          <div class="form-group">
+              <label class="sr-only" for="exampleInputPassword2">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password"
+                required
+                data-ng-model="auth.password"/>
+          </div>
+          <button type="submit" class="btn btn-default"
+            data-ng-disabled="loginForm.$invalid">Sign in</button>
+      </form>
+      <span class="text-info pull-right signInLoader" data-ng-if="authInProgress">Please wait...</span>
+      <div class="userMenu pull-right" data-ng-if="global.isAuthN">
+          <a href="">
+              <img class="userAvatar" data-ng-src="{{global.currentUser.photo}}"/>
+              <span data-ng-bind="global.currentUser.name"></span>
+          </a>
+          <a href="" class="btn btn-danger" data-ng-click="logout();">Log out</a>
+      </div>
+  </header>
+
+  <!-- Begin page content -->
+  <div ng-controller="mainController">
+      <div class="container">
+          <div class="clearfix">
+              <div class="authorizationBlock">
+                  <div class="smallAvatar">
+                      <img src="https://upsa.epam.com/workload/photo/4000741400006795239">
+                  </div>
+                  <div class="personName">Sergey Leonov <span class="downSymbol"></span></div>
+              </div>
+          </div>
+          <div class="nearestTalkWrapper">
+              <div class="nearestTalk">
+                  <div class="whereInfo">{{tt.lector}}</div>
+                  <div class="whereInfo">{{tt.date}} - {{tt.location}}</div>
+                  <div class="talkTitle">
+                      <div class="bigAvatar">
+                          <img src="/img/user/{{tt.photo}}.gif">
+                      </div>
+                      <div>{{tt.description}}</div>
+                  </div>
+                  <div class="nearestTalkComments">
+                      <a href="/portal/api/ideas/{{mainIdea._id}}"><span class="yellowComment"></span> 10 Комментариев</a>
+                  </div>
+              </div>
+          </div>
+          <div class="clearfix allIdeasContainer">
+              <div id="addIdea" rel="addIdeaContainer" class="openPopup">
+                  <div class="pencilPic"></div>
+                  <div class="addButtonText">I have a great idea!</div>
+              </div>
+              <a ng-repeat="idea in ideasList" href="#/portal/api/ideas/{{idea._id}}" class="ideaBlock">
+                  <div class="ideaWrap">
+                      <div class="contentWrap">
+                          <div class="contentIdea">
+                              <span>{{idea.$id}}</span> <span>{{idea.ideaText}}</span>
+                          </div>
+                          <div class="socialBlock">
+                              <span class="likePic" ng-click="toggleLike($event, $index)">{{idea.likes.length}}</span>
+                              <span class="commentPic">{{idea.comments.length}}</span>
+                          </div>
+                      </div>
+                  </div>
+              </a>
+          </div>
+      </div>
+
+      <div id="addIdeaContainer">
+          <div class="overlay"></div>
+          <div class="popupContainerWrapper">
+              <div class="popupContainer container">
+                  <form ng-submit="addIdea()">
+                      <div class="closePopup" rel="addIdeaContainer" ng-click="clearIdea()"></div>
+                      <textarea name="" ng-model="ideaText" class="addNewIdeaText" autofocus ></textarea>
+                      <input type="submit" class="submitIdeaButton" value="Поделиться идеей!" rel="addIdeaContainer">
+                  </form>
+              </div>
+          </div>
+      </div>
+
+      <div ng-view></div>
+  </div>
+
+  <!-- build:js(public) /js/app.min.js -->
+  <script src="/js/core.js"></script>
+  <script src="/js/clamp.min.js"></script>
+  <script src="/js/app1.js"></script>
+  <script src="/js/services/helper.js"></script>
+  <script src="/js/services/auth-service.js"></script>
+  <script src="/js/services/data-provider.js"></script>
+  <script src="/js/services/ideas.js"></script>
+  <script src="/js/controllers/idea-controller.js"></script>
+  <script src="/js/script.js"></script>
+  <!-- endbuild -->
+</body>
+</html>
