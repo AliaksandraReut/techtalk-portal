@@ -71,13 +71,29 @@ body{
     float: right;
     margin-top: 35px;
 }
-.personName{
-    font-size: 13px;
-    color: #fff;
-    padding: 0 20px 0 14px;
-    position: relative;
+.personInfo{
+    padding-left: 10px;
     float: left;
     line-height: 25px;
+    position: relative;
+}
+.personInfo a{
+    display: none;
+    position: absolute;
+    right: 0;
+    left: 10px;
+    background: rgba(251, 251, 251, 0.6);
+    font-size: 13px;
+    padding-right: 20px;
+    text-align: right;
+    text-decoration: none;
+    color: #000;
+}
+.personName{
+    font-size: 13px;
+    padding-right:20px;
+    color: #fff;
+    position: relative;
 }
 .personName:after{
     content: '';
@@ -87,6 +103,33 @@ body{
     border: 5px solid transparent;
     border-top: 5px solid #fcda04;
 }
+.personInfo:hover a{
+    display: block;
+}
+
+.authorizationBlock input{
+    float: left;
+    width: 200px;
+    line-height: 25px;
+    padding: 0 7px;
+}
+.authorizationBlock input:first-child{
+    margin-right: 10px;
+}
+.authorizationBlock button{
+    /*width: 29px;
+    height: 29px;
+    background: #fcda04;
+    border: none;
+    border-radius: 50%;*/
+    border: 0;
+    padding: 0;
+}
+.waitingText {
+    font-size: 13px;
+    color: #fff;
+}
+
 
 /*Nearest Talk*/
 .nearestTalkWrapper{
