@@ -21,7 +21,6 @@
                 },
                 get: function(ideaId){
                     var idea = Idea.get({ideaId: ideaId});
-                    console.log(idea);
                     return idea;
                 },
                 post: function(ideaText){
@@ -42,7 +41,6 @@
                     var comment = new Comment();
                     comment.commentText = commentText;
                     comment.idea = ideaId;
-                    console.log($rootScope.global.currentUser);
                     comment.author = $rootScope.global.currentUser._id;
                     comment.$save();
                     return comment;

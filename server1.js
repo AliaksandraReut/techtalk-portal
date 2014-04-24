@@ -463,8 +463,7 @@ app.get('/api/ideas/:id', function(req, res) {
 
     Idea
         .findOne({ _id: id })
-        .populate('comments')
-        .populate('author')
+        .populate('author comments')
         .exec(function(err, result) {
             if (err) return res.send(err);
             console.log('\t>> result'.grey, result);
@@ -509,12 +508,7 @@ app.post('/api/comment', checkAuth, function(req, res){
             .populate('author');
 
         console.log("+++++++"+Comment);
-       /* User.findOne({_id:newComment.author}, function(err, user){
-            if (err) return res.send(err);
-            newComment.author=user;
-            console.log("++++++++++++"+user);
-            console.log("---"+newComment);
-        });*/
+
         Idea.findOne({_id: ideaId}, function(err, idea) {
             if (err) return res.send(err);
             idea.comments.push(Comment._id);
@@ -524,6 +518,15 @@ app.post('/api/comment', checkAuth, function(req, res){
                 if (err) return res.send(err);
                 console.log('\t>> result'.grey, Comment);
                 res.json(Comment);
+
+        Idea.findOne({_id: ideaId}, function(err, idea) {
+            if (err) return res.send(err);
+            idea.comments.push(newComment._id);
+            // Save changed idea
+            idea.save(function(err) {
+                if (err) return res.send(err);
+                console.log('\t>> result'.grey, newComment);
+                res.json(newComment);
             });
         });
     });

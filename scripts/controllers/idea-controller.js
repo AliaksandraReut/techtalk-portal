@@ -47,7 +47,6 @@
                 if (ideas.length) {
                     idea = ideas[0];
                     idea.comments = commentFactory.getAll(ideaId);
-                    console.log(idea.comments);
                     $scope.ideaWithComment = idea;
                 }
 

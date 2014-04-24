@@ -11,33 +11,65 @@
   <base href="/portal"></base>
 </head>
 <body>
+<<<<<<< HEAD
+=======
+  <header>
+      <form class="form-inline pull-right" role="form"
+          data-ng-if="!global.isAuthN && !authInProgress"
+          data-ng-submit="signin();">
+          <div class="form-group">
+              <label class="sr-only" for="exampleInputEmail2">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email"
+                required
+                data-ng-model="auth.login">
+          </div>
+          <div class="form-group">
+              <label class="sr-only" for="exampleInputPassword2">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password"
+                required
+                data-ng-model="auth.password"/>
+          </div>
+          <button type="submit" class="btn btn-default"
+            data-ng-disabled="loginForm.$invalid">Sign in</button>
+      </form>
+      <span class="text-info pull-right signInLoader" data-ng-if="authInProgress">Please wait...</span>
+      <div class="userMenu pull-right" data-ng-if="global.isAuthN">
+          <a href="">
+              <img class="userAvatar" data-ng-src="{{global.currentUser.photo}}"/>
+              <span data-ng-bind="global.currentUser.name"></span>
+          </a>
+          <a href="" class="btn btn-danger" data-ng-click="logout();">Log out</a>
+      </div>
+  </header>
+
+>>>>>>> b91f6805bdb256171f3646593e336f61aa96e570
   <!-- Begin page content -->
   <div ng-controller="mainController">
       <div class="container">
           <div class="clearfix">
               <div class="authorizationBlock">
-              <form class="form-inline pull-right" role="form"
-                    data-ng-if="!global.isAuthN && !authInProgress"
-                    data-ng-submit="signin();">
-                  <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email"
-                         required
-                         data-ng-model="auth.login">
-                  <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password"
-                         required
-                         data-ng-model="auth.password"/>
-                  <button type="submit" class="btn btn-default"
-                          data-ng-disabled="loginForm.$invalid"></button>
-              </form>
-              <span class="waitingText" data-ng-if="authInProgress">Please wait...</span>
-              <div data-ng-if="global.isAuthN">
-                  <div class="smallAvatar">
-                      <img data-ng-src="{{global.currentUser.photo}}">
+                  <form class="form-inline pull-right" role="form"
+                        data-ng-if="!global.isAuthN && !authInProgress"
+                        data-ng-submit="signin();">
+                      <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email"
+                             required
+                             data-ng-model="auth.login">
+                      <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password"
+                             required
+                             data-ng-model="auth.password"/>
+                      <button type="submit" class="btn btn-default"
+                              data-ng-disabled="loginForm.$invalid"></button>
+                  </form>
+                  <span class="waitingText" data-ng-if="authInProgress">Please wait...</span>
+                  <div data-ng-if="global.isAuthN">
+                      <div class="smallAvatar">
+                          <img data-ng-src="{{global.currentUser.photo}}">
+                      </div>
+                      <div class="personInfo">
+                          <div class="personName" data-ng-bind="global.currentUser.name"></div>
+                          <a href="" class="btn btn-danger" class="personName" data-ng-click="logout();">Log out</a>
+                      </div>
                   </div>
-                  <div class="personInfo">
-                      <div class="personName" data-ng-bind="global.currentUser.name"></div>
-                      <a href="" class="btn btn-danger" class="personName" data-ng-click="logout();">Log out</a>
-                  </div>
-              </div>
               </div>
           </div>
           <div class="nearestTalkWrapper">
