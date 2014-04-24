@@ -340,8 +340,8 @@ textarea{
     z-index: 999;
     border-radius: 90px;
     cursor: pointer;
-    outline: none;
     -moz-appearance: none;
+    outline: none;
 }
 .closePopup{
     position: absolute;
