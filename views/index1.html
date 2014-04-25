@@ -29,6 +29,7 @@
                               data-ng-disabled="loginForm.$invalid"></button>
                   </form>
                   <span class="waitingText" data-ng-if="authInProgress">Please wait...</span>
+                  <span class="waitingText">{{errorWithCredentials}}</span>
                   <div data-ng-if="global.isAuthN">
                       <div class="smallAvatar">
                           <img data-ng-src="{{global.currentUser.photo}}">
@@ -60,7 +61,7 @@
                   <div class="pencilPic"></div>
                   <div class="addButtonText">I have a great idea!</div>
               </div>
-              <a ng-repeat="idea in ideasList" href="#/portal/api/ideas/{{idea._id}}" class="ideaBlock">
+              <a ng-repeat="idea in ideasList" href="#/api/ideas/{{idea._id}}" class="ideaBlock">
                   <div class="ideaWrap">
                       <div class="contentWrap">
                           <div class="contentIdea">
@@ -83,7 +84,26 @@
                   <form ng-submit="addIdea()">
                       <div class="closePopup" rel="addIdeaContainer" ng-click="clearIdea()"></div>
                       <textarea name="" ng-model="ideaText" class="addNewIdeaText" autofocus ></textarea>
-                      <input type="submit" class="submitIdeaButton" value="Поделиться идеей!" rel="addIdeaContainer">
+                      <input type="submit" class="submitIdeaButton" value="Поделиться&#10;идеей!" rel="addIdeaContainer">
+                  </form>
+              </div>
+          </div>
+      </div>
+
+      <div id="authorizationBlock">
+          <div class="popupContainerWrapper">
+              <div class="popupContainer container">
+                  <form class="form-inline pull-right" role="form"
+                        data-ng-if="!global.isAuthN && !authInProgress"
+                        data-ng-submit="signin();">
+                      <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email"
+                             required
+                             data-ng-model="auth.login">
+                      <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password"
+                             required
+                             data-ng-model="auth.password"/>
+                      <button type="submit" class="btn btn-default"
+                              data-ng-disabled="loginForm.$invalid"></button>
                   </form>
               </div>
           </div>

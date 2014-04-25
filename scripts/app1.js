@@ -21,10 +21,10 @@
                 });
 
                 $routeProvider
-                    .when('/portal',{
+                    .when('/',{
                         controller:'mainController'
                     })
-                    .when('/portal/api/ideas/:ideaId',{
+                    .when('/api/ideas/:ideaId',{
                         controller: 'commentsController',
                         templateUrl:'/portal/views/ideaPage.html'
                     })
@@ -48,6 +48,7 @@
 
                 $scope.signin = function() {
                     $scope.authInProgress = true;
+                    $rootScope.errorWithCredentials=null;
 
                     authService.login({
                         login: $scope.auth.login,
@@ -57,6 +58,7 @@
 
                         }, function(error) {
                             $rootScope.global.errorStack.push(error);
+                            $rootScope.errorWithCredentials=error.message;
                             console.error(error.errorCode, error.message);
                         })
                         ['finally'](function() {

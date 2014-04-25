@@ -518,6 +518,8 @@ app.post('/api/comment', checkAuth, function(req, res){
                 if (err) return res.send(err);
                 console.log('\t>> result'.grey, Comment);
                 res.json(Comment);
+            });
+        });
 
         Idea.findOne({_id: ideaId}, function(err, idea) {
             if (err) return res.send(err);

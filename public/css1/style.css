@@ -333,8 +333,11 @@ textarea{
     bottom: 0;
     left: 50%;
     margin-left: -90px;
+    padding-top: 15px;
     width: 180px;
     height: 180px;
+    font-size: 18px;
+    color: #505050;
     border: none;
     background: #fff;
     z-index: 999;
