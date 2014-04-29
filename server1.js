@@ -450,6 +450,7 @@ app.get('/api/ideas', function(req, res) {
 
     Idea
         .find()
+        .populate('author')
         .exec(function(err, results) {
             if (err) return res.send(err);
             console.log('\t>> result'.grey, results);
@@ -463,10 +464,10 @@ app.get('/api/ideas/:id', function(req, res) {
 
     Idea
         .findOne({ _id: id })
-        .populate('author comments')
+        .populate('author')
         .exec(function(err, result) {
             if (err) return res.send(err);
-            console.log('\t>> result'.grey, result);
+            console.log('\t>> result'.red, result);
             res.json(result);
         });
 });
@@ -484,13 +485,13 @@ app.get('/api/comment', function(req, res) {
     console.log('/api/comment?ideaId'.cyan, req.query.ideaId);
     var id = req.query.ideaId;
 
-    Idea
-        .findOne({ _id: id })
-        .populate("author comments")
+    Comment
+        .find({ idea: id })
+        .populate("author")
         .exec(function(err, result) {
             if (err) return res.send(err);
-            console.log('\t>> result'.grey, result);
-            res.json(result.comments);
+            console.log('\t>> result'.green, result);
+            res.json(result);
         });
 });
 
@@ -500,30 +501,11 @@ app.post('/api/comment', checkAuth, function(req, res){
     // Create comment
     Comment.create(req.body, function(err, newComment) {
         if (err) return res.send(err);
-        // Find idea to add comment in array
-        newComment.$save();
-
-        Comment
-            .findOne({_id: newComment._id})
-            .populate('author');
-
-        console.log("+++++++"+Comment);
-
-        Idea.findOne({_id: ideaId}, function(err, idea) {
-            if (err) return res.send(err);
-            idea.comments.push(Comment._id);
-            console.log("*****"+idea);
-            // Save changed idea
-            idea.save(function(err) {
-                if (err) return res.send(err);
-                console.log('\t>> result'.grey, Comment);
-                res.json(Comment);
-            });
-        });
 
         Idea.findOne({_id: ideaId}, function(err, idea) {
             if (err) return res.send(err);
             idea.comments.push(newComment._id);
+            console.log("*****"+idea);
             // Save changed idea
             idea.save(function(err) {
                 if (err) return res.send(err);
@@ -534,69 +516,69 @@ app.post('/api/comment', checkAuth, function(req, res){
     });
 });
 
-app.delete('/api/comment/:commentId', checkAuth, function(req, res){
-    console.log('/api/comment/:commentId'.cyan, req.params.commentId);
-    var commentId = req.params.commentId,
-        ideaId, findBy;
-
-    findBy = {_id: commentId};
-    if (!~admins.indexOf(req.session.user._id)) {
-        findBy.author = req.session.user._id;
-    }
-
-    // Find comment to get ideaId
-    Comment.findOne(findBy, function(err, comment) {
-        if (err) return res.send(err);
-        ideaId = comment.idea;
-        // Find idea to delete commentId from array
-        Idea.findOne({_id: ideaId}, function(err, idea) {
-            if (err) return res.send(err);
-            var ind = idea.comments.indexOf(commentId);
-            idea.comments.splice(ind, 1);
-            // Save changed idea
-            idea.save(function(err) {
-                if (err) return res.send(err);
-                // Remove comment
-                Comment.remove({_id: ideaId}, function(err) {
-                    if (err) return res.send(err);
-                    console.log('\t>> result'.grey, idea);
-                    res.json(idea);
-                });
-            });
-        });
-    });
-});
-
-app.post('/api/like', checkAuth, function(req, res){
-    console.log('/api/like'.cyan, req.body);
-    var ideaId = req.body.ideaId,
-        authorId = req.session.user._id;
-    Idea.findOne({_id: ideaId}, function(err, idea) {
-        if (err) return res.send(err);
-        idea.likes.push(authorId);
-        idea.save(function(err) {
-            if (err) return res.send(err);
-            console.log('\t>> result'.grey, idea);
-            res.json(idea);
-        });
-    });
-});
-
-app.delete('/api/like', checkAuth, function(req, res){
-    console.log('/api/like?ideaId'.cyan, req.query.ideaId);
-    var ideaId = req.query.ideaId,
-        authorId = req.session.user._id;
-    Idea.findOne({_id: ideaId}, function(err, idea) {
-        if (err) return res.send(err);
-        var ind = idea.likes.indexOf(authorId);
-        idea.likes.splice(ind, 1);
-        idea.save(function(err) {
-            if (err) return res.send(err);
-            console.log('\t>> result'.grey, idea);
-            res.json(idea);
-        });
-    });
-});
+//app.delete('/api/comment/:commentId', checkAuth, function(req, res){
+//    console.log('/api/comment/:commentId'.cyan, req.params.commentId);
+//    var commentId = req.params.commentId,
+//        ideaId, findBy;
+//
+//    findBy = {_id: commentId};
+//    if (!~admins.indexOf(req.session.user._id)) {
+//        findBy.author = req.session.user._id;
+//    }
+//
+//    // Find comment to get ideaId
+//    Comment.findOne(findBy, function(err, comment) {
+//        if (err) return res.send(err);
+//        ideaId = comment.idea;
+//        // Find idea to delete commentId from array
+//        Idea.findOne({_id: ideaId}, function(err, idea) {
+//            if (err) return res.send(err);
+//            var ind = idea.comments.indexOf(commentId);
+//            idea.comments.splice(ind, 1);
+//            // Save changed idea
+//            idea.save(function(err) {
+//                if (err) return res.send(err);
+//                // Remove comment
+//                Comment.remove({_id: ideaId}, function(err) {
+//                    if (err) return res.send(err);
+//                    console.log('\t>> result'.grey, idea);
+//                    res.json(idea);
+//                });
+//            });
+//        });
+//    });
+//});
+//
+//app.post('/api/like', checkAuth, function(req, res){
+//    console.log('/api/like'.cyan, req.body);
+//    var ideaId = req.body.ideaId,
+//        authorId = req.session.user._id;
+//    Idea.findOne({_id: ideaId}, function(err, idea) {
+//        if (err) return res.send(err);
+//        idea.likes.push(authorId);
+//        idea.save(function(err) {
+//            if (err) return res.send(err);
+//            console.log('\t>> result'.grey, idea);
+//            res.json(idea);
+//        });
+//    });
+//});
+//
+//app.delete('/api/like', checkAuth, function(req, res){
+//    console.log('/api/like?ideaId'.cyan, req.query.ideaId);
+//    var ideaId = req.query.ideaId,
+//        authorId = req.session.user._id;
+//    Idea.findOne({_id: ideaId}, function(err, idea) {
+//        if (err) return res.send(err);
+//        var ind = idea.likes.indexOf(authorId);
+//        idea.likes.splice(ind, 1);
+//        idea.save(function(err) {
+//            if (err) return res.send(err);
+//            console.log('\t>> result'.grey, idea);
+//            res.json(idea);
+//        });
+//    });
+//});
 
 //handling routes on client
 app.all('*', function(req, res) {

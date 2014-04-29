@@ -17,6 +17,7 @@ lib-cov
 pids
 logs
 results
+files/user-photo
 
 service-config.json
 pmc-service-config.json

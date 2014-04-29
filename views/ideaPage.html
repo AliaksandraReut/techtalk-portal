@@ -20,7 +20,7 @@
                 <div class="commentsBlock">
                     <div class="comment" ng-repeat="comment in ideaWithComment.comments" ng-click="removeComment($index)">
                         <div class="smallAvatar">
-                            <img src="{{comment.author.photo}}">
+                            <img ng-src="{{comment.author.photo}}">
                         </div>
                         <div class="author">
                             {{comment.author.name}}
