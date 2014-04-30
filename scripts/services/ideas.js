@@ -46,7 +46,9 @@
                     return comment;
                 },
                 remove: function(comment){
-                    Comment.remove({commentId: comment._id});
+                    if(comment.author._id === $rootScope.global.currentUser._id){
+                        Comment.remove({commentId: comment._id});
+                    }
                 }
             };
         }])

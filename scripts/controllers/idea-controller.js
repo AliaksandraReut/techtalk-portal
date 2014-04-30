@@ -52,8 +52,8 @@
 
                 /* TODO delete comment*/
                 $scope.removeComment = function(index){
-                    if ($rootScope.global.isAuthN) {
-                        var comment = $scope.ideaWithComment.comments[index];
+                    var comment = $scope.ideaWithComment.comments[index];
+                    if ($rootScope.global.isAuthN && (comment.author._id === $rootScope.global.currentUser._id)) {
                         commentFactory.remove(comment);
                         $scope.ideaWithComment.comments.splice(index, 1);
                     }
