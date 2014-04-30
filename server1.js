@@ -509,45 +509,45 @@ app.post('/api/comment', checkAuth, function(req, res){
             // Save changed idea
             idea.save(function(err) {
                 if (err) return res.send(err);
-                console.log('\t>> result'.grey, newComment);
-                res.json(newComment);
+                console.log('\t>> result'.red, newComment);
+                Comment
+                    .findOne({ _id: newComment._id })
+                    .populate("author")
+                    .exec(function(err, result) {
+                        if (err) return res.send(err);
+                        console.log('\t>> result'.green, result);
+                        res.json(result);
+                    });
             });
         });
     });
 });
 
-//app.delete('/api/comment/:commentId', checkAuth, function(req, res){
-//    console.log('/api/comment/:commentId'.cyan, req.params.commentId);
-//    var commentId = req.params.commentId,
-//        ideaId, findBy;
-//
-//    findBy = {_id: commentId};
-//    if (!~admins.indexOf(req.session.user._id)) {
-//        findBy.author = req.session.user._id;
-//    }
-//
-//    // Find comment to get ideaId
-//    Comment.findOne(findBy, function(err, comment) {
-//        if (err) return res.send(err);
-//        ideaId = comment.idea;
-//        // Find idea to delete commentId from array
-//        Idea.findOne({_id: ideaId}, function(err, idea) {
-//            if (err) return res.send(err);
-//            var ind = idea.comments.indexOf(commentId);
-//            idea.comments.splice(ind, 1);
-//            // Save changed idea
-//            idea.save(function(err) {
-//                if (err) return res.send(err);
-//                // Remove comment
-//                Comment.remove({_id: ideaId}, function(err) {
-//                    if (err) return res.send(err);
-//                    console.log('\t>> result'.grey, idea);
-//                    res.json(idea);
-//                });
-//            });
-//        });
-//    });
-//});
+app.delete('/api/comment/:commentId', checkAuth, function(req, res){
+    console.log('/api/comment/:commentId'.cyan, req.params.commentId);
+    var commentId = req.params.commentId;
+
+    // Find comment to get ideaId
+    Comment.findOne({_id: commentId}, function(err, comment) {
+        if (err) return res.send(err);
+        // Find idea to delete commentId from array
+        Idea.findOne({_id: comment.idea}, function(err, idea) {
+            if (err) return res.send(err);
+            var ind = idea.comments.indexOf(commentId);
+            idea.comments.splice(ind, 1);
+            // Save changed idea
+            idea.save(function(err) {
+                if (err) return res.send(err);
+                // Remove comment
+                Comment.remove({_id: commentId}, function(err) {
+                    if (err) return res.send(err);
+                    console.log('\t>> result'.grey, idea);
+                    res.json(idea);
+                });
+            });
+        });
+    });
+});
 //
 //app.post('/api/like', checkAuth, function(req, res){
 //    console.log('/api/like'.cyan, req.body);
