@@ -5,7 +5,7 @@
         <div class="ideaCommentsContainer">
             <div class="commentIdeaAvatar">
                 <div class="bigAvatar">
-                    <img src="{{ideaWithComment.author.photo}}">
+                    <img ng-src="{{ideaWithComment.author.photo}}">
                 </div>
             </div>
             <a href="#/" class="closePopup"></a>
@@ -14,10 +14,11 @@
                     {{ideaWithComment.ideaText}}
                 </p>
                 <p ng-show="global.currentUser.role == 'admin'">
-                    <input type="checkbox" ng-model="createTechTalk"/> Create techtalk
-                    <form ng-show="createTechTalk">
-                        <input type="datetime"/> Date of techtalk
-                        <input type="text"> Place
+                    <input type="checkbox" ng-model="createTechTalk" /> Create techtalk
+                    <form ng-show="createTechTalk" ng-submit="submitTechTalk()">
+                        <input type="date" ng-model="date" name="datetime"/> Date of techtalk
+                        <input type="text" ng-model="location" name="place"> location
+                        <button type="submit" class="btn btn-primary">Create</button>
                     </form>
                 </p>
                 <div class="socialBlock clearfix">

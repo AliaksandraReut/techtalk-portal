@@ -5,7 +5,7 @@
     ng.module('tp')
         .controller('mainController', ['$scope', '$rootScope', 'TT', 'ideaFactory', 'likeFactory',
             function($scope, $rootScope, TT, ideaFactory, likeFactory) {
-                $scope.tt = TT.get();
+                $scope.tt = ideaFactory.getTechTalk();
                 $scope.ideasList = ideaFactory.getAll();
 
                 $scope.addIdea = function(){
@@ -38,8 +38,8 @@
                     $scope.ideaText='';
                 };
             }])
-        .controller('commentsController',['$scope', '$rootScope', '$filter', 'commentFactory', 'likeFactory', '$routeParams',
-            function($scope, $rootScope, $filter, commentFactory, likeFactory, $routeParams) {
+        .controller('commentsController',['$scope', '$rootScope', '$filter', 'commentFactory', 'likeFactory', '$routeParams', 'ideaFactory',
+            function($scope, $rootScope, $filter, commentFactory, likeFactory, $routeParams, ideaFactory) {
                 var ideaId = $routeParams.ideaId,
                     ideas = $filter('filter')($scope.$parent.ideasList, {_id: ideaId}),
                     idea;
@@ -50,7 +50,6 @@
                     $scope.ideaWithComment = idea;
                 }
 
-                /* TODO delete comment*/
                 $scope.removeComment = function(index){
                     var comment = $scope.ideaWithComment.comments[index];
                     if ($rootScope.global.isAuthN && (comment.author._id === $rootScope.global.currentUser._id)) {
@@ -58,7 +57,11 @@
                         $scope.ideaWithComment.comments.splice(index, 1);
                     }
                 };
-
+                $scope.createTechTalk = false;
+                $scope.submitTechTalk = function(){
+                    if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && this.date && this.location)
+                    ideaFactory.update(ideaId, 'techtalk', this.date, this.location);
+                };
                 $scope.addComment = function(){
                     if ($scope.commentText && $rootScope.global.isAuthN) {
                         var comment = commentFactory.post($scope.ideaWithComment._id, $scope.commentText);
@@ -87,5 +90,12 @@
                     var popup_id = $('#' + popupId);
                     popup_id.hide("fast");
                 }
-            }]);
+            }])
+        .filter('count', function(){
+            return  function(array){
+                if(typeof array === 'object'){
+                    return array.length;
+                }
+            }
+        });
 })(angular);

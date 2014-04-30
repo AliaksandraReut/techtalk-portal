@@ -248,28 +248,16 @@ app.get('/api/user/:name?', function(req, res) {
  });*/
 
 app.get('/api/techtalk', function(req, res) {
-    var query = req.query;
-
-    if (query.from && query.to) {
-        TechTalk
-            .find()
-            .where('date').gte(new Date(req.query.from))
-            .where('date').lt(new Date(req.query.to))
-            .exec(function(err, results) {
-                if (err) return res.send(err);
-                console.log('\t>> results'.grey, results);
-                res.json(results);
-            });
-    }
-    else {
-        TechTalk
-            .find()
-            .exec(function(err, results) {
-                if (err) return res.send(err);
-                console.log('\t>> results'.grey, results);
-                res.json(results);
-            });
-    }
+    console.log('get tt ===>'.blue);
+    Idea
+        .findOne({type: 'techtalk', ttDate: {$gt: new Date()}})
+        .populate('author')
+        .sort({ttDate: 1})
+        .exec(function(err, results) {
+            if (err) return res.send(err);
+            console.log('\t>> result ===>'.green, results);
+            res.json(results);
+        });
 });
 
 app.get('/api/techtalk/:id', function(req, res) {
@@ -441,15 +429,15 @@ app.delete('/api/news/:id', function(req, res) {
 app.get('/api/tt', function(req, res) {
     console.log('/api/tt'.cyan);
     var data = JSON.parse(fs.readFileSync('./techtalk.json', 'utf8'));
-    console.log('\t>> data'.grey, data);
-    res.json(data);
+    console.log('\t>> data'.blue, data);
+//    res.json(data);
 });
 
 app.get('/api/ideas', function(req, res) {
     console.log('/api/ideas'.cyan, req.query);
 
     Idea
-        .find()
+        .find({type: 'idea'})
         .populate('author')
         .exec(function(err, results) {
             if (err) return res.send(err);
@@ -467,11 +455,21 @@ app.get('/api/ideas/:id', function(req, res) {
         .populate('author')
         .exec(function(err, result) {
             if (err) return res.send(err);
-            console.log('\t>> result'.red, result);
+            console.log('\t>> result'.green, result);
             res.json(result);
         });
 });
 
+app.put('/api/ideas/:id', checkAuth, function(req, res) {
+    var updatedData = req.body;
+    delete updatedData._id;
+
+    Idea.findOneAndUpdate({_id: req.params.id}, { $set: updatedData }, function(err, result) {
+        if (err) return res.send(err);
+        console.log('\t>> result'.grey, result);
+        res.json(result);
+    });
+});
 app.post('/api/ideas', checkAuth, function(req, res) {
     console.log('/api/idea'.cyan, req.body);
     Idea.create(req.body, function(err, result) {

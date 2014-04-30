@@ -3,10 +3,10 @@
 
     ng.module('tp.services')
         .factory('TT', ['$resource', function($resource){
-            return $resource('/portal/api/tt');
+            return $resource('/portal/api/techtalk');
         }])
         .factory('Idea', ['$resource', function($resource){
-            return $resource('/portal/api/ideas/:ideaId', {ideaId: '@id'});
+            return $resource('/portal/api/ideas/:ideaId', {ideaId: '@id'}, {update: {method: "PUT"}});
         }])
         .factory('Comment', ['$resource', function($resource){
             return $resource('/portal/api/comment/:commentId');
@@ -14,7 +14,7 @@
         .factory('Like', ['$resource', function($resource){
             return $resource('/portal/api/like');
         }])
-        .service('ideaFactory', ['$rootScope', 'Idea', function($rootScope, Idea){
+        .service('ideaFactory', ['$rootScope', 'Idea', 'TT', function($rootScope, Idea, TT){
             return {
                 getAll: function(){
                     return Idea.query();
@@ -29,6 +29,21 @@
                     idea.author = $rootScope.global.currentUser._id;
                     idea.$save();
                     return idea;
+                },
+                update: function(ideaId, type, date, location){
+                    console.log('createTechTalk');
+
+                    var idea = Idea.update({
+                        id: ideaId,
+                        type: type,
+                        ttDate: new Date(date),
+                        ttLocation: location
+                    });
+                    return idea;
+                },
+                getTechTalk: function(){
+                    console.log('getTechTalk');
+                    return TT.get()
                 }
             };
         }])
