@@ -15,7 +15,7 @@
                 </p>
                 <p ng-show="global.currentUser.role == 'admin'">
                     <input type="checkbox" ng-model="createTechTalk" /> Create techtalk
-                    <form ng-show="createTechTalk" ng-submit="submitTechTalk()">
+                    <form ng-show="createTechTalk" ng-submit="submitTechTalk(ideaWithComment.ideaIndex)">
                         <input type="date" ng-model="date" name="datetime"/> Date of techtalk
                         <input type="text" ng-model="location" name="place"> location
                         <button type="submit" class="btn btn-primary">Create</button>

@@ -42,8 +42,7 @@
                     return idea;
                 },
                 getTechTalk: function(){
-                    console.log('getTechTalk');
-                    return TT.get()
+                    return TT.get();
                 }
             };
         }])

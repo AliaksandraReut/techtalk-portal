@@ -250,58 +250,60 @@ app.get('/api/user/:name?', function(req, res) {
 app.get('/api/techtalk', function(req, res) {
     console.log('get tt ===>'.blue);
     Idea
-        .findOne({type: 'techtalk', ttDate: {$gt: new Date()}})
-        .populate('author')
+        .findOne({type: 'techtalk', ttDate: {$gte: new Date()}})
+        .populate('author comments')
         .sort({ttDate: 1})
         .exec(function(err, results) {
             if (err) return res.send(err);
-            console.log('\t>> result ===>'.green, results);
-            res.json(results);
+            Idea.populate(results, {path: 'comments.author', model: 'User'}, function(err, result){
+                console.log('\t>> result ===>'.green, results);
+                res.json(results);
+            });
         });
 });
 
-app.get('/api/techtalk/:id', function(req, res) {
-    var id = req.params.id;
+//app.get('/api/techtalk/:id', function(req, res) {
+//    var id = req.params.id;
+//
+//    TechTalk
+//        .findOne(id)
+//        .exec(function(err, result) {
+//            if (err) return res.send(err);
+//            console.log('\t>> result'.grey, result);
+//            res.json(result);
+//        });
+//});
 
-    TechTalk
-        .findOne(id)
-        .exec(function(err, result) {
-            if (err) return res.send(err);
-            console.log('\t>> result'.grey, result);
-            res.json(result);
-        });
-});
+//app.post('/api/techtalk', checkAuth, function(req, res) {
+//    console.log('/api/techtalk'.cyan, req.body);
+//    TechTalk.create(req.body, function(err, result) {
+//        if (err) return res.send(err);
+//        console.log('\t>> result'.grey, result);
+//        res.json(result);
+//    });
+//});
 
-app.post('/api/techtalk', checkAuth, function(req, res) {
-    console.log('/api/techtalk'.cyan, req.body);
-    TechTalk.create(req.body, function(err, result) {
-        if (err) return res.send(err);
-        console.log('\t>> result'.grey, result);
-        res.json(result);
-    });
-});
+//app.put('/api/techtalk/:id', checkAuth, function(req, res) {
+//    var updatedData = req.body;
+//    delete updatedData._id;
+//    updatedData.updated = new Date();
+//
+//    TechTalk.findOneAndUpdate({id: req.params.id}, { $set: updatedData }, function(err, result) {
+//        if (err) return res.send(err);
+//        //console.log('\t>> result'.grey, result);
+//        res.json(result);
+//    });
+//});
 
-app.put('/api/techtalk/:id', checkAuth, function(req, res) {
-    var updatedData = req.body;
-    delete updatedData._id;
-    updatedData.updated = new Date();
-
-    TechTalk.findOneAndUpdate({id: req.params.id}, { $set: updatedData }, function(err, result) {
-        if (err) return res.send(err);
-        //console.log('\t>> result'.grey, result);
-        res.json(result);
-    });
-});
-
-app.delete('/api/techtalk/:id', checkAuth, function(req, res) {
-    console.log('/api/techtalk/:id'.cyan, req.params.id);
-    TechTalk
-        .remove({id: req.params.id})
-        .exec(function(err) {
-            if (err) return res.send(err);
-            res.send('ok');
-        });
-});
+//app.delete('/api/techtalk/:id', checkAuth, function(req, res) {
+//    console.log('/api/techtalk/:id'.cyan, req.params.id);
+//    TechTalk
+//        .remove({id: req.params.id})
+//        .exec(function(err) {
+//            if (err) return res.send(err);
+//            res.send('ok');
+//        });
+//});
 
 /**
  * Tags
@@ -320,29 +322,29 @@ app.delete('/api/techtalk/:id', checkAuth, function(req, res) {
  });
  });*/
 
-app.get('/api/tag', function(req, res) {
-    Tag
-        .find({})
-        .exec(function(err, results) {
-            if (err) return res.send(err);
-            console.log('\t>> results'.grey, results);
+//app.get('/api/tag', function(req, res) {
+//    Tag
+//        .find({})
+//        .exec(function(err, results) {
+//            if (err) return res.send(err);
+//            console.log('\t>> results'.grey, results);
+//
+//            var tags = [];
+//            for (var i = 0; i < results.length; i++) {
+//                tags.push(results[i]._id);
+//            }
+//            res.json(tags);
+//        });
+//});
 
-            var tags = [];
-            for (var i = 0; i < results.length; i++) {
-                tags.push(results[i]._id);
-            }
-            res.json(tags);
-        });
-});
-
-app.post('/api/tag', function(req, res) {
-    console.log('/api/tag'.cyan, req.body);
-    Tag.create({_id: req.body.tag}, function(err, result) {
-        if (err) return res.send(err);
-        console.log('\t>> result'.grey, result);
-        res.json(result);
-    });
-});
+//app.post('/api/tag', function(req, res) {
+//    console.log('/api/tag'.cyan, req.body);
+//    Tag.create({_id: req.body.tag}, function(err, result) {
+//        if (err) return res.send(err);
+//        console.log('\t>> result'.grey, result);
+//        res.json(result);
+//    });
+//});
 
 /**
  * News
@@ -354,84 +356,84 @@ app.post('/api/tag', function(req, res) {
  });
  });*/
 
-app.get('/api/news', function(req, res) {
-    console.log('/api/news?page=1&amount=5'.cyan, req.query);
-    var page = req.query.page,
-        countOnPage = req.query.amount || 5;
+//app.get('/api/news', function(req, res) {
+//    console.log('/api/news?page=1&amount=5'.cyan, req.query);
+//    var page = req.query.page,
+//        countOnPage = req.query.amount || 5;
+//
+//    News
+//        .find({})
+//        .sort('-date')
+//        .exec(function(err, results) {
+//            if (err) return res.send(err);
+//            console.log('\t>> result'.grey, results);
+//            if (page) {
+//                var from = (page - 1) * countOnPage,
+//                    to = from + countOnPage;
+//                res.json(results.slice(from, to));
+//            } else {
+//                res.json(results);
+//            }
+//        });
+//});
 
-    News
-        .find({})
-        .sort('-date')
-        .exec(function(err, results) {
-            if (err) return res.send(err);
-            console.log('\t>> result'.grey, results);
-            if (page) {
-                var from = (page - 1) * countOnPage,
-                    to = from + countOnPage;
-                res.json(results.slice(from, to));
-            } else {
-                res.json(results);
-            }
-        });
-});
+//app.get('/api/news/:id', function(req, res) {
+//    console.log('/api/news/:id'.cyan, req.params.id);
+//    var id = req.params.id;
+//
+//    News
+//        .findById(id)
+//        .exec(function(err, result) {
+//            if (err) return res.send(err);
+//            console.log('\t>> result'.grey, result);
+//            res.json(result);
+//        });
+//});
 
-app.get('/api/news/:id', function(req, res) {
-    console.log('/api/news/:id'.cyan, req.params.id);
-    var id = req.params.id;
+//app.post('/api/news', function(req, res) {
+//    console.log('/api/news'.cyan, req.body);
+//    News.create(req.body, function(err, result) {
+//        if (err) return res.send(err);
+//        console.log('\t>> results'.grey, result);
+//        res.json(result);
+//    });
+//});
 
-    News
-        .findById(id)
-        .exec(function(err, result) {
-            if (err) return res.send(err);
-            console.log('\t>> result'.grey, result);
-            res.json(result);
-        });
-});
+//app.put('/api/news/:id', function(req, res) {
+//    console.log('/api/news'.cyan, req.params.id);
+//    console.log('/api/news'.cyan, req.body);
+//    var id = req.params.id;
+//    var updatedData = {
+//        title: req.body.title,
+//        content: req.body.content,
+//        updated: new Date()
+//    };
+//
+//    News.findByIdAndUpdate(id, { $set: updatedData }, function(err, result) {
+//        if (err) return res.send(err);
+//        console.log('\t>> results'.grey, result);
+//        res.json(result);
+//    });
+//});
 
-app.post('/api/news', function(req, res) {
-    console.log('/api/news'.cyan, req.body);
-    News.create(req.body, function(err, result) {
-        if (err) return res.send(err);
-        console.log('\t>> results'.grey, result);
-        res.json(result);
-    });
-});
-
-app.put('/api/news/:id', function(req, res) {
-    console.log('/api/news'.cyan, req.params.id);
-    console.log('/api/news'.cyan, req.body);
-    var id = req.params.id;
-    var updatedData = {
-        title: req.body.title,
-        content: req.body.content,
-        updated: new Date()
-    };
-
-    News.findByIdAndUpdate(id, { $set: updatedData }, function(err, result) {
-        if (err) return res.send(err);
-        console.log('\t>> results'.grey, result);
-        res.json(result);
-    });
-});
-
-app.delete('/api/news/:id', function(req, res) {
-    console.log('delete news id '.cyan, req.params.id);
-    var id = req.params.id;
-
-    News.findByIdAndRemove(id, function(err) {
-        if (err) return res.send(err);
-        res.send('ok');
-    });
-});
+//app.delete('/api/news/:id', function(req, res) {
+//    console.log('delete news id '.cyan, req.params.id);
+//    var id = req.params.id;
+//
+//    News.findByIdAndRemove(id, function(err) {
+//        if (err) return res.send(err);
+//        res.send('ok');
+//    });
+//});
 
 
 //My posts
-app.get('/api/tt', function(req, res) {
-    console.log('/api/tt'.cyan);
-    var data = JSON.parse(fs.readFileSync('./techtalk.json', 'utf8'));
-    console.log('\t>> data'.blue, data);
-//    res.json(data);
-});
+//app.get('/api/tt', function(req, res) {
+//    console.log('/api/tt'.cyan);
+//    var data = JSON.parse(fs.readFileSync('./techtalk.json', 'utf8'));
+//    console.log('\t>> data'.blue, data);
+////    res.json(data);
+//});
 
 app.get('/api/ideas', function(req, res) {
     console.log('/api/ideas'.cyan, req.query);
@@ -474,8 +476,13 @@ app.post('/api/ideas', checkAuth, function(req, res) {
     console.log('/api/idea'.cyan, req.body);
     Idea.create(req.body, function(err, result) {
         if (err) return res.send(err);
-        console.log('\t>> results'.grey, result);
-        res.json(result);
+        Idea.findOne({_id: result._id})
+            .populate('author')
+            .exec(function(err, result){
+                if (err) return res.send(err);
+                console.log('\t>> results'.grey, result);
+                res.json(result);
+            });
     });
 });
 

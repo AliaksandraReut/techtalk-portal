@@ -7,6 +7,7 @@
             function($scope, $rootScope, TT, ideaFactory, likeFactory) {
                 $scope.tt = ideaFactory.getTechTalk();
                 $scope.ideasList = ideaFactory.getAll();
+                $scope.showTTComments = false;
 
                 $scope.addIdea = function(){
                     if ($scope.ideaText && $rootScope.global.isAuthN) {
@@ -59,8 +60,12 @@
                 };
                 $scope.createTechTalk = false;
                 $scope.submitTechTalk = function(){
-                    if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && this.date && this.location)
-                    ideaFactory.update(ideaId, 'techtalk', this.date, this.location);
+                    if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && this.date && this.location){
+                        ideaFactory.update(ideaId, 'techtalk', this.date, this.location);
+                        $scope.$parent.ideasList = ideaFactory.getAll();
+                        window.location.href = '#/';
+                    }
+
                 };
                 $scope.addComment = function(){
                     if ($scope.commentText && $rootScope.global.isAuthN) {

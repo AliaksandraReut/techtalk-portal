@@ -10,14 +10,13 @@
   <!-- we probably need more control here -->
   <base href="/portal"></base>
 </head>
-<body>
+<body ng-cloak="">
   <!-- Begin page content -->
   <div ng-controller="mainController">
       <div class="container">
           <div class="clearfix">
               <div class="authorizationBlock">
-                  <form class="form-inline pull-right" role="form"
-                        data-ng-if="!global.isAuthN && !authInProgress"
+                  <form class="form-inline pull-right" role="form" ng-if="!global.isAuthN && !authInProgress"
                         data-ng-submit="signin();">
                       <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email"
                              required
@@ -30,7 +29,7 @@
                   </form>
                   <span class="waitingText" data-ng-if="authInProgress">Please wait...</span>
                   <span class="waitingText">{{errorWithCredentials}}</span>
-                  <div data-ng-if="global.isAuthN">
+                  <div ng-if="global.isAuthN">
                       <div class="smallAvatar">
                           <img data-ng-src="{{global.currentUser.photo}}">
                       </div>
@@ -52,7 +51,21 @@
                       <div>{{tt.ideaText}}</div>
                   </div>
                   <div class="nearestTalkComments">
-                      <a href="/portal/api/ideas/{{mainIdea._id}}"><span class="yellowComment"></span>{{tt.comments | count}} Комментариев</a>
+                      <span ng-click="showTTComments = !showTTComments" style="cursor: pointer"><span class="yellowComment"></span>{{tt.comments | count}} Комментариев</span>
+                      <div ng-show="showTTComments" >
+                          <div class="comment" ng-repeat="comment in tt.comments">
+                              <div class="smallAvatar">
+                                  <img ng-src="{{comment.author.photo}}">
+                              </div>
+                              <div class="author">
+                                  {{comment.author.name}}
+                              </div>
+                              <div class="commentContent">
+                                  {{comment.commentText}}
+                              </div>
+                          </div>
+                      </div>
+
                   </div>
               </div>
           </div>
@@ -62,7 +75,7 @@
                   <div class="addButtonText">I have a great idea!</div>
               </div>
               <a ng-repeat="idea in ideasList" href="#/api/ideas/{{idea._id}}" class="ideaBlock">
-                  <div class="ideaWrap">
+                  <div class="ideaWrap" ng-init="idea.ideaIndex = $index">
                       <div class="contentWrap">
                           <div class="contentIdea">
                               <span>{{idea.$id}}</span> <span>{{idea.ideaText}}</span>
