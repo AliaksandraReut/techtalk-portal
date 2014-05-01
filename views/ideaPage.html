@@ -13,7 +13,14 @@
                 <p class="ideaContent">
                     {{ideaWithComment.ideaText}}
                 </p>
-
+                <p ng-show="global.currentUser.role == 'admin'">
+                    <input type="checkbox" ng-model="createTechTalk" /> Create techtalk
+                    <form ng-show="createTechTalk" ng-submit="submitTechTalk(ideaWithComment.ideaIndex)">
+                        <input type="date" ng-model="date" name="datetime"/> Date of techtalk
+                        <input type="text" ng-model="location" name="place"> location
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </p>
                 <div class="socialBlock clearfix">
                     <span class="likePic voted" ng-click="toggleLike($event)">{{ideaWithComment.likes.length}}</span>
                 </div>
@@ -35,7 +42,7 @@
             <div class="addCommentBlock">
                 <form ng-submit="addComment()">
                     <div class="addCommentInput">
-                        <input type="text" ng-model="commentText" placeholder="Комментарий">
+                        <input type="text" ng-model="commentText" placeholder="Комментарий" ng-disabled="!global.isAuthN">
                         <button type="submit" value="" class="commentSubmitButton"></button>
                     </div>
                 </form>
