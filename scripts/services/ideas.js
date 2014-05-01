@@ -66,16 +66,17 @@
                 }
             };
         }])
-        .service('likeFactory', ['Like', function(Like){
+        .service('likeFactory', ['Like','$rootScope', function(Like, $rootScope){
             return {
                 post: function(ideaId){
                     var like = new Like();
                     like.ideaId = ideaId;
+                    like.userId = $rootScope.global.currentUser._id;
                     like.$save();
                     return like;
                 },
                 delete: function(ideaId){
-                    Like.remove({ideaId: ideaId});
+                    Like.remove({ideaId: ideaId, userId: $rootScope.global.currentUser._id});
                 }
             };
         }]);
