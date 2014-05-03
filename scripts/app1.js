@@ -5,7 +5,7 @@
     ng.module('tp.directives', []);
 
     ng.module('tp', [
-            'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngAnimate',
+            'ngCookies', 'ngResource', 'ngRoute',
             'tp.services', 'tp.directives'
         ])
         .config(['$routeProvider', '$locationProvider', '$provide',

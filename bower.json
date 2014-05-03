@@ -17,15 +17,10 @@
     "tests"
   ],
   "dependencies": {
+    "jquery": "~2.1.0",
     "angular": "~1.2.0",
     "angular-route": "~1.2.0",
     "angular-cookies": "~1.2.0",
-    "angular-resource": "~1.2.0",
-    "angular-sanitize": "~1.2.0",
-    "angular-animate": "~1.2.0",
-    "angular-bootstrap": "~0.6.0",
-    "bootstrap": "~3.0.0",
-    "pace": "~0.4.11",
-    "hammerjs": ""
+    "angular-resource": "~1.2.0"
   }
 }
