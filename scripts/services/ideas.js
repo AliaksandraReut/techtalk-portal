@@ -1,6 +1,6 @@
 ;(function(ng) {
     'use strict';
-
+//id
     ng.module('tp.services')
         .factory('TT', ['$resource', function($resource){
             return $resource('/portal/api/techtalk');

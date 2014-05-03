@@ -41,7 +41,11 @@
               </div>
           </div>
           <div class="nearestTalkWrapper">
-              <div class="nearestTalk">
+              <div data-ng-if="!showTT" class="talkTitle">
+                  В ближайшее время ничего не предвидется!
+              </div>
+              <div data-ng-if="showTT" class="nearestTalk">
+
                   <div class="whereInfo">{{tt.author.name}}</div>
                   <div class="whereInfo">{{tt.ttDate| date: dd-MM-yyyy}} - {{tt.ttLocation}}</div>
                   <div class="talkTitle">
@@ -51,21 +55,11 @@
                       <div>{{tt.ideaText}}</div>
                   </div>
                   <div class="nearestTalkComments">
-                      <span ng-click="showTTComments = !showTTComments" style="cursor: pointer"><span class="yellowComment"></span>{{tt.comments | count}} Комментариев</span>
-                      <div ng-show="showTTComments" >
-                          <div class="comment" ng-repeat="comment in tt.comments">
-                              <div class="smallAvatar">
-                                  <img ng-src="{{comment.author.photo}}">
-                              </div>
-                              <div class="author">
-                                  {{comment.author.name}}
-                              </div>
-                              <div class="commentContent">
-                                  {{comment.commentText}}
-                              </div>
-                          </div>
-                      </div>
-
+                      <a href="#/api/ideas/{{tt._id}}">
+                          <span style=" cursor: pointer">
+                              <span class="yellowComment"></span>{{tt.comments | countComments}}
+                          </span>
+                      </a>
                   </div>
               </div>
           </div>

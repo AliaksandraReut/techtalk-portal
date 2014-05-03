@@ -135,6 +135,7 @@ body{
 .nearestTalkWrapper{
     width: 75%;
     margin: 5% auto 10%;
+    min-height: 90px;
 }
 .nearestTalk{
     padding-left: 150px;
@@ -309,6 +310,8 @@ body{
     height: 60%;
     top: 15%;
     left: 12.5%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 textarea{
     border: none;

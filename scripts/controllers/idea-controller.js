@@ -8,6 +8,7 @@
                 $scope.tt = ideaFactory.getTechTalk();
                 $scope.ideasList = ideaFactory.getAll();
                 $scope.showTTComments = false;
+                $scope.showTT=true;
 
                 $scope.$on('createdTechTalk', function(e, data){
                     $scope.tt = ideaFactory.getTechTalk();
@@ -53,6 +54,9 @@
                     idea = ideas[0];
                     idea.comments = commentFactory.getAll(ideaId);
                     $scope.ideaWithComment = idea;
+                }else{
+                    console.log("**");
+                    $scope.ideaWithComment = $scope.$parent.tt;
                 }
 
                 $scope.removeComment = function(index){
@@ -66,6 +70,7 @@
                 $scope.submitTechTalk = function(){
                     if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && this.date && this.location){
                         ideaFactory.update(ideaId, 'techtalk', this.date, this.location);
+                        $scope.showTT=true;
                         $scope.$emit('createdTechTalk');
                         window.location.href = '#/';
                     }
@@ -106,5 +111,20 @@
                     return array.length;
                 }
             }
+        })
+        .filter('countComments', function(){
+            return  function(array){
+                if(typeof array === 'object'){
+                    var length=array.length;
+                    if(length==1){
+                        return length+"  Комментарий";
+                    }else if(length>1&&length<5){
+                        return length+"  Комментария";
+                    }else{
+                        return length+"  Комментариев";
+                    }
+                }
+            }
         });
+    ///comm
 })(angular);

@@ -10,6 +10,10 @@
             </div>
             <a href="#/" class="closePopup"></a>
             <div class="ideaContainerWrapper">
+                <div data-ng-if="ideaWithComment.type=='techtalk'">
+                    <div class="whereInfo">{{tt.author.name}}</div>
+                    <div class="whereInfo">{{tt.ttDate| date: dd-MM-yyyy}} - {{tt.ttLocation}}</div>
+                </div>
                 <p class="ideaContent">
                     {{ideaWithComment.ideaText}}
                 </p>
