@@ -23,4 +23,4 @@ service-config.json
 pmc-service-config.json
 
 npm-debug.log
-public/img/user/*.gif
+public/

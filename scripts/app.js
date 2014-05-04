@@ -1,73 +1,65 @@
-;(function(ng) {
-    'use strict';
+'use strict';
+angular.module('tp.services', []);
+angular.module('tp.directives', []);
 
-    ng.module('tp.services', []);
-    ng.module('tp.directives', []);
+angular.module('tp', ['ngCookies', 'ngResource', 'ngRoute','tp.services', 'tp.directives'])
+    .config(function($routeProvider, $locationProvider, $provide) {
+        $provide.constant('appConfig', {
+            userCookie: 'user_settings',
+            responseStatus: {
+                SUCCESS: 'success',
+                ERROR: 'error'
+            },
+            BASE_PATH: '/portal',
+            EMAIL_SUFFIX: '@epam.com'
+        });
 
-    ng.module('tp', [
-            'ngCookies', 'ngResource', 'ngRoute',
-            'tp.services', 'tp.directives'
-        ])
-        .config(['$routeProvider', '$locationProvider', '$provide',
-            function($routeProvider, $locationProvider, $provide) {
-                $provide.constant('appConfig', {
-                    userCookie: 'user_settings',
-                    responseStatus: {
-                        SUCCESS: 'success',
-                        ERROR: 'error'
-                    },
-                    BASE_PATH: '/portal',
-                    EMAIL_SUFFIX: '@epam.com'
-                });
+        $routeProvider
+            .when('/',{
+                controller:'mainController'
+            })
+            .when('/api/ideas/:ideaId',{
+                controller: 'commentsController',
+                templateUrl:'/portal/views/ideaPage.html'
+            })
+            .otherwise({redirectTo: '/portal'});
+        })
+    .run(function($rootScope, $q, authService) {
+        return $q.all([
+            authService.checkAuthN()
+        ]);
+    })
+    .controller('AppCtrl', function($rootScope, $scope, $q, authService) {
+        var global = {
+            isAuthN: authService.isAuthN(),
+            currentUser: authService.getUserData(),
+            errorStack: []
+        };
 
-                $routeProvider
-                    .when('/',{
-                        controller:'mainController'
-                    })
-                    .when('/api/ideas/:ideaId',{
-                        controller: 'commentsController',
-                        templateUrl:'/portal/views/ideaPage.html'
-                    })
-                    .otherwise({redirectTo: '/portal'});
-            }])
-        .run(['$rootScope', '$q', 'authService', function($rootScope, $q, authService) {
-            return $q.all([
-                authService.checkAuthN()
-            ]);
-        }])
-        .controller('AppCtrl', ['$rootScope', '$scope', '$q', 'authService',
-            function($rootScope, $scope, $q, authService) {
-                var global = {
-                    isAuthN: authService.isAuthN(),
-                    currentUser: authService.getUserData(),
-                    errorStack: []
-                };
+        $rootScope.global = global;
+        $scope.auth = {};
 
-                $rootScope.global = global;
-                $scope.auth = {};
+        $scope.signin = function() {
+            $scope.authInProgress = true;
+            $rootScope.errorWithCredentials=null;
 
-                $scope.signin = function() {
-                    $scope.authInProgress = true;
-                    $rootScope.errorWithCredentials=null;
+            authService.login({
+                login: $scope.auth.login,
+                password: $scope.auth.password
+            })
+                .then(function() {
 
-                    authService.login({
-                        login: $scope.auth.login,
-                        password: $scope.auth.password
-                    })
-                        .then(function() {
+                }, function(error) {
+                    $rootScope.global.errorStack.push(error);
+                    $rootScope.errorWithCredentials=error.message;
+                    console.error(error.errorCode, error.message);
+                })
+                ['finally'](function() {
+                $scope.authInProgress = false;
+            });
+        };
 
-                        }, function(error) {
-                            $rootScope.global.errorStack.push(error);
-                            $rootScope.errorWithCredentials=error.message;
-                            console.error(error.errorCode, error.message);
-                        })
-                        ['finally'](function() {
-                        $scope.authInProgress = false;
-                    });
-                };
-
-                $scope.logout = function() {
-                    authService.logout();
-                };
-            }]);
-})(angular);
+        $scope.logout = function() {
+            authService.logout();
+        };
+    });
