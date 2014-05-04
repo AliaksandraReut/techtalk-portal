@@ -64,6 +64,12 @@ module.exports = function(grunt) {
             cwd: './styles/fonts/',
             src: '**',
             dest: './public/fonts/'
+          },
+          {
+            expand: true,
+            cwd: './styles/css/',
+            src: '**',
+            dest: './public/css/'
           }
         ]
       },
