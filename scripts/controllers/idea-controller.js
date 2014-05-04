@@ -7,8 +7,6 @@
             function($scope, $rootScope, TT, ideaFactory, likeFactory) {
                 $scope.tt = ideaFactory.getTechTalk();
                 $scope.ideasList = ideaFactory.getAll();
-                $scope.showTTComments = false;
-                $scope.showTT=true;
 
                 $scope.$on('createdTechTalk', function(e, data){
                     $scope.tt = ideaFactory.getTechTalk();
@@ -70,7 +68,6 @@
                 $scope.submitTechTalk = function(){
                     if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && this.date && this.location){
                         ideaFactory.update(ideaId, 'techtalk', this.date, this.location);
-                        $scope.showTT=true;
                         $scope.$emit('createdTechTalk');
                         window.location.href = '#/';
                     }
