@@ -3,6 +3,7 @@ angular.module('tp')
     .controller('mainController', function($scope, $rootScope, TT, ideaFactory, likeFactory) {
             $scope.tt = ideaFactory.getTechTalk();
             $scope.ideasList = ideaFactory.getAll();
+            $scope.openAddIdea=false;
 
             $scope.$on('createdTechTalk', function(e, data){
                 $scope.tt = ideaFactory.getTechTalk();
@@ -10,7 +11,6 @@ angular.module('tp')
             });
             $scope.addIdea = function(){
                 if ($scope.ideaText && $rootScope.global.isAuthN) {
-                    console.log('add Idea');
                     var idea = ideaFactory.post($scope.ideaText);
                     $scope.ideasList.push(idea);
                     $scope.ideaText='';
@@ -36,6 +36,7 @@ angular.module('tp')
 
             $scope.clearIdea = function(){
                 $scope.ideaText='';
+                $scope.openAddIdea=false;
             };
         })
     .controller('commentsController', function($scope, $rootScope, $filter, commentFactory, likeFactory, $routeParams, ideaFactory) {
@@ -78,7 +79,7 @@ angular.module('tp')
 
             $scope.toggleLike = function(e){
                 var ind = $scope.ideaWithComment.likes.indexOf($rootScope.global.currentUser._id);
-                if ($rootScope.global.isAuthN){
+                if ($rootScope.global.isuthN){
                     if (!~ind) {
                         likeFactory.post($scope.ideaWithComment._id);
                         $scope.ideaWithComment.likes.push($rootScope.global.currentUser._id);

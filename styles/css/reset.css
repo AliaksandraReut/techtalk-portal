@@ -9,6 +9,9 @@ p, blockquote, th, td {
 ul, ol {
     list-style: none;
 }
+a{
+    text-decoration: none;
+}
 .clearfix {
     clear:both;
     zoom:1;

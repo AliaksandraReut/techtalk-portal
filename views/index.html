@@ -43,27 +43,27 @@
               <div data-ng-if="tt.type!='techtalk'" class="talkTitle">
                   В ближайшее время ничего не предвидется!
               </div>
+              <a href="#/api/ideas/{{tt._id}}">
               <div data-ng-if="tt.type=='techtalk'" class="nearestTalk">
-
                   <div class="whereInfo">{{tt.author.name}}</div>
                   <div class="whereInfo">{{tt.ttDate| date: dd-MM-yyyy}} - {{tt.ttLocation}}</div>
                   <div class="talkTitle">
                       <div class="bigAvatar">
                           <img ng-src="{{tt.author.photo}}">
                       </div>
-                      <div>{{tt.ideaText}}</div>
+                      <div class="talkTitle">{{tt.ideaText}}</div>
                   </div>
+
                   <div class="nearestTalkComments">
-                      <a href="#/api/ideas/{{tt._id}}">
                           <span style=" cursor: pointer">
                               <span class="yellowComment"></span>{{tt.comments | countComments}}
                           </span>
-                      </a>
                   </div>
               </div>
+              </a>
           </div>
           <div class="clearfix allIdeasContainer">
-              <div id="addIdea" rel="addIdeaContainer" class="openPopup">
+              <div id="addIdea" ng-click="openAddIdea=true">
                   <div class="pencilPic"></div>
                   <div class="addButtonText">I have a great idea!</div>
               </div>
@@ -74,7 +74,9 @@
                               <span>{{idea.$id}}</span> <span>{{idea.ideaText}}</span>
                           </div>
                           <div class="socialBlock">
-                              <span class="likePic" ng-click="toggleLike($event, $index)">{{idea.likes.length}}</span>
+                              <span class="likePic" ng-class="{voted: idea.likes.indexOf(global.currentUser._id)>-1}" ng-click="toggleLike($event, $index)">
+                                  {{idea.likes.length}}
+                              </span>
                               <span class="commentPic">{{idea.comments.length}}</span>
                           </div>
                       </div>
@@ -83,37 +85,18 @@
           </div>
       </div>
 
-      <div id="addIdeaContainer">
+      <div ng-show="openAddIdea" id="addIdeaContainer">
           <div class="overlay"></div>
           <div class="popupContainerWrapper">
               <div class="popupContainer container">
                   <form ng-submit="addIdea()">
-                      <div class="closePopup" rel="addIdeaContainer" ng-click="clearIdea()"></div>
+                      <div class="closePopup" ng-click="clearIdea()"></div>
                       <textarea name="" ng-model="ideaText" class="addNewIdeaText" autofocus ></textarea>
                       <input type="submit" class="submitIdeaButton" value="Поделиться&#10;идеей!" rel="addIdeaContainer">
                   </form>
               </div>
           </div>
       </div>
-
-      <!--<div id="authorizationBlock">-->
-          <!--<div class="popupContainerWrapper">-->
-              <!--<div class="popupContainer container">-->
-                  <!--<form class="form-inline pull-right" role="form"-->
-                        <!--data-ng-if="!global.isAuthN && !authInProgress"-->
-                        <!--data-ng-submit="signin();">-->
-                      <!--<input type="email" class="form-control" id="exampleInputEmail2" placeholder="Enter email"-->
-                             <!--required-->
-                             <!--data-ng-model="auth.login">-->
-                      <!--<input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password"-->
-                             <!--required-->
-                             <!--data-ng-model="auth.password"/>-->
-                      <!--<button type="submit" class="btn btn-default"-->
-                              <!--data-ng-disabled="loginForm.$invalid"></button>-->
-                  <!--</form>-->
-              <!--</div>-->
-          <!--</div>-->
-      <!--</div>-->
 
       <div ng-view></div>
   </div>
@@ -126,7 +109,6 @@
   <script src="/js/services/auth-service.js"></script>
   <script src="/js/services/ideas.js"></script>
   <script src="/js/controllers/idea-controller.js"></script>
-  <script src="/js/script.js"></script>
   <!-- endbuild -->
 </body>
 </html>

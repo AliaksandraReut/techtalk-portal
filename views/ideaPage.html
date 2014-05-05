@@ -26,15 +26,19 @@
                     </form>
                 </p>
                 <div class="socialBlock clearfix">
-                    <span class="likePic voted" ng-click="toggleLike($event)">{{ideaWithComment.likes.length}}</span>
+                    <span class="likePic" ng-class="votedIdea(ideaWithComment.likes)" ng-click="toggleLike($event)">{{ideaWithComment.likes.length}}</span>
                 </div>
                 <div class="commentsBlock">
-                    <div class="comment" ng-repeat="comment in ideaWithComment.comments" ng-click="removeComment($index)">
+                    <div class="comment" ng-repeat="comment in ideaWithComment.comments">
                         <div class="smallAvatar">
                             <img ng-src="{{comment.author.photo}}">
                         </div>
+
                         <div class="author">
-                            {{comment.author.name}}
+                            <span>{{comment.author.name}}</span>
+                            <span ng-show="global.currentUser.role == 'admin'||global.currentUser._id == comment.author._id" class="removeButton" ng-click="removeComment($index)">
+                                Удалить
+                            </span>
                         </div>
                         <div class="commentContent">
                             {{comment.commentText}}

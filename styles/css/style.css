@@ -117,11 +117,6 @@ body{
     margin-right: 10px;
 }
 .authorizationBlock button{
-    /*width: 29px;
-    height: 29px;
-    background: #fcda04;
-    border: none;
-    border-radius: 50%;*/
     border: 0;
     padding: 0;
 }
@@ -148,6 +143,7 @@ body{
     line-height: 16px;
     font-size: 13px;
     font-weight: 700;
+    color: #222629;
 }
 .talkTitle{
     margin-top: 10px;
@@ -155,16 +151,14 @@ body{
     font-size: 37px;
     line-height: 50px;
     color: #fff;
+    text-decoration: none;
 }
 .nearestTalkComments{
     margin-top: 50px;
-}
-.nearestTalkComments a{
     color: #fff;
-    text-decoration: none;
     font-size: 13px;
-    display: block;
 }
+
 .yellowComment{
     height: 16px;
     width: 23px;
@@ -283,7 +277,6 @@ body{
     right: 0;
     left: 0;
     bottom: 0;
-    display: none;
     z-index: 997;
 }
 /*Add Idea PoPup*/
@@ -436,7 +429,7 @@ input[type='submit']:hover{
     margin: 0 0 35px;
 }
 .voted{
-    background-color: #fae608;
+    background-color: #fcda04;
 }
 .commentsBlock{
     margin: 15px 0 30px;
@@ -494,4 +487,18 @@ input[type='submit']:hover{
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     vertical-align: top;
+}
+.removeButton{
+    display: none;
+    margin-left: 30px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 13px;
+    font-family: 'OpenSans_Semibold';
+}
+.comment:hover .removeButton{
+    display: inline;
+}
+.removeButton:hover{
+    text-decoration: underline;
 }
