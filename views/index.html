@@ -46,7 +46,7 @@
               <a href="#/api/ideas/{{tt._id}}">
               <div data-ng-if="tt.type=='techtalk'" class="nearestTalk">
                   <div class="whereInfo">{{tt.author.name}}</div>
-                  <div class="whereInfo">{{tt.ttDate| date: dd-MM-yyyy}} - {{tt.ttLocation}}</div>
+                  <div class="whereInfo">{{tt.ttDate| date: 'dd-MM-yyyy, HH.mm'}} - {{tt.ttLocation}}</div>
                   <div class="talkTitle">
                       <div class="bigAvatar">
                           <img ng-src="{{tt.author.photo}}">
@@ -89,8 +89,11 @@
           <div class="overlay"></div>
           <div class="popupContainerWrapper">
               <div class="popupContainer container">
-                  <form ng-submit="addIdea()">
-                      <div class="closePopup" ng-click="clearIdea()"></div>
+                  <div class="closePopup" ng-click="clearIdea()"></div>
+                  <div data-ng-if="!global.isAuthN" class="addNewIdeaText">
+                      Вы не авторизованы, поэтому не можете добавлять идеи. Авторизуйтесь, пожалуйста!
+                  </div>
+                  <form data-ng-if="global.isAuthN" ng-submit="addIdea()">
                       <textarea name="" ng-model="ideaText" class="addNewIdeaText" autofocus ></textarea>
                       <input type="submit" class="submitIdeaButton" value="Поделиться&#10;идеей!" rel="addIdeaContainer">
                   </form>

@@ -139,10 +139,9 @@ body{
     margin-left: -130px;
 }
 
-.nearestTalk .whereInfo{
+.whereInfo{
     line-height: 16px;
     font-size: 13px;
-    font-weight: 700;
     color: #222629;
 }
 .talkTitle{
@@ -384,6 +383,8 @@ input[type='submit']:hover{
     width: 75%;
     top: 15%;
     left: 12.5%;
+    max-height: 80%;
+    display: flex;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     background: #fff;
@@ -406,10 +407,13 @@ input[type='submit']:hover{
     width: 110px;
 }
 .ideaContainerWrapper {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    padding: 45px 115px 20px 180px ;
-    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    color: #666869;
+}
+.forTechtalk{
+    margin-bottom: 15px;
 }
 .commentSubmit{
     display: table-cell;
@@ -421,24 +425,30 @@ input[type='submit']:hover{
     top: 37px;
     right: 34px;
 }
+.titleWrapper{
+    padding: 45px 115px 0 180px;
+    flex-basis: auto;
+}
 .ideaContent{
     font-size: 37px;
     font-family: "OpenSans_Light";
     line-height: 47px;
     color: #767d81;
-    margin: 0 0 35px;
+    margin: 0 0 20px;
 }
 .voted{
     background-color: #fcda04;
 }
 .commentsBlock{
-    margin: 15px 0 30px;
+    margin: 15px 115px 30px 0;
+    padding: 0 30px 0 180px;
+    overflow-y: auto;
+    flex: 1;
 }
 .comment{
     margin-top: 15px;
     padding-left: 37px;
     font-size: 13px;
-    color: #666869;
     line-height: 14px;
 }
 .comment .smallAvatar{
@@ -451,10 +461,9 @@ input[type='submit']:hover{
     font-family: "OpenSans_Regular";
 }
 .addCommentBlock{
-    min-height: 94px;
+    flex-basis: 94px;
     background: #ebebeb;
     border-bottom: 1px solid #a5a6a7;
-    clear: both;
 }
 .addCommentBlock form{
     padding: 27px 115px 27px 180px;
@@ -490,7 +499,7 @@ input[type='submit']:hover{
 }
 .removeButton{
     display: none;
-    margin-left: 30px;
+    float: right;
     cursor: pointer;
     font-size: 12px;
     line-height: 13px;
@@ -501,4 +510,18 @@ input[type='submit']:hover{
 }
 .removeButton:hover{
     text-decoration: underline;
+}
+.errorAddComment{
+    color: #666869;
+    padding: 25px 115px 0 180px;
+}
+.adminPanel{
+    margin-top: 10px;
+}
+.adminPanelItem label{
+    width: 150px;
+    margin-right: 20px;
+}
+.adminPanelItem input{
+    width: 400px;
 }
