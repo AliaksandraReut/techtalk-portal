@@ -1,6 +1,6 @@
 'use strict';
 angular.module('tp')
-    .controller('mainController', function($scope, $rootScope, TT, ideaFactory, likeFactory) {
+    .controller('mainController', function($scope, $rootScope, TT, ideaFactory, likeFactory, userFactory) {
             $scope.tt = ideaFactory.getTechTalk();
             $scope.ideasList = ideaFactory.getAll();
             $scope.openAddIdea=false;
@@ -17,6 +17,7 @@ angular.module('tp')
                 }
             };
 
+            console.log(userFactory.getAll());
             $scope.toggleLike = function(e, index){
                 var idea = $scope.ideasList[index],
                     ind;

@@ -16,6 +16,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-ngmin');
 
     grunt.initConfig({
         config: config,
@@ -32,11 +33,22 @@ module.exports = function (grunt) {
                 tasks: ['copy:css']
             }
         },
+        ngmin: {
+            controllers: {
+                src: ['test/src/controllers/one.js'],
+                dest: 'test/generated/controllers/one.js'
+            },
+            directives: {
+                expand: true,
+                cwd: 'test/src',
+                src: ['directives/**/*.js'],
+                dest: 'test/generated'
+            }
+        },
         concat: {
             development: {
                 files: {
                     'public/js/core.js': [
-                        'bower_components/jquery/dist/jquery.js',
                         'bower_components/angular/angular.js',
                         'bower_components/angular-route/angular-route.js',
                         'bower_components/angular-resource/angular-resource.js',
