@@ -49,8 +49,13 @@ angular.module('tp')
                 idea.comments = commentFactory.getAll(ideaId);
                 $scope.ideaWithComment = idea;
             }else{
-                console.log("**");
+                console.log($scope.$parent.tt);
                 $scope.ideaWithComment = $scope.$parent.tt;
+                /* var date=new Date($scope.$parent.tt.ttDate).toLocaleDateString();
+                $scope.date = date;
+                $scope.date=date.getDate()+"-"+date.getMonth()+"-"+date.getYear();
+                $scope.time=date.getHours()+"."+date.getMinutes();
+                console.log($scope.date+" - "+$scope.time+ date);*/
             }
 
             $scope.removeComment = function(index){
@@ -62,6 +67,7 @@ angular.module('tp')
             };
             $scope.createTechTalk = false;
             $scope.submitTechTalk = function(){
+
                 if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && this.date && this.location){
                     ideaFactory.update(ideaId, 'techtalk', this.date, this.location);
                     $scope.$emit('createdTechTalk');

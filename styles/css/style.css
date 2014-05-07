@@ -525,3 +525,6 @@ input[type='submit']:hover{
 .adminPanelItem input{
     width: 400px;
 }
+.adminPanelItem input[type="date"], .adminPanelItem input[type="time"]{
+    width: 180px;
+}
