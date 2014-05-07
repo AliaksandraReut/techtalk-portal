@@ -182,7 +182,7 @@ app.get('/api/techtalk', function(req, res) {
     console.log('get tt ===>'.blue);
     Idea
         .findOne({type: 'techtalk', ttDate: {$gte: new Date()}})
-        .populate('author comments')
+        .populate('author comments ttLector')
         .sort({ttDate: 1})
         .exec(function(err, results) {
             if (err) return res.send(err);

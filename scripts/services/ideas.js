@@ -31,14 +31,16 @@ angular.module('tp.services')
                 idea.$save();
                 return idea;
             },
-            update: function(ideaId, type, date, location){
+            update: function(ideaId, type, ideaWithComment){
                 console.log('createTechTalk');
 
                 var idea = Idea.update({
                     id: ideaId,
                     type: type,
-                    ttDate: new Date(date),
-                    ttLocation: location
+                    ttDate: new Date(ideaWithComment.ttDate),
+                    ttTime: ideaWithComment.ttTime,
+                    ttLocation: ideaWithComment.ttLocation,
+                    ttLector: ideaWithComment.ttLector._id
                 });
                 return idea;
             },

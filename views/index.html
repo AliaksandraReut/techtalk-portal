@@ -45,11 +45,11 @@
               </div>
               <a href="#/api/ideas/{{tt._id}}">
               <div data-ng-if="tt.type=='techtalk'" class="nearestTalk">
-                  <div class="whereInfo">{{tt.author.name}}</div>
-                  <div class="whereInfo">{{tt.ttDate| date: 'dd-MM-yyyy, HH.mm'}} - {{tt.ttLocation}}</div>
+                  <div class="whereInfo">{{tt.ttLector.name}}</div>
+                  <div class="whereInfo">{{tt.ttDate| date: 'dd-MM-yyyy'}}, {{tt.ttTime}} - {{tt.ttLocation}}</div>
                   <div class="talkTitle">
                       <div class="bigAvatar">
-                          <img ng-src="{{tt.author.photo}}">
+                          <img ng-src="{{tt.ttLector.photo}}">
                       </div>
                       <div class="talkTitle">{{tt.ideaText}}</div>
                   </div>
@@ -90,12 +90,12 @@
           <div class="popupContainerWrapper">
               <div class="popupContainer container">
                   <div class="closePopup" ng-click="clearIdea()"></div>
-                  <div data-ng-if="!global.isAuthN" class="addNewIdeaText">
+                  <div ng-show="!global.isAuthN" class="addNewIdeaText">
                       Вы не авторизованы, поэтому не можете добавлять идеи. Авторизуйтесь, пожалуйста!
                   </div>
-                  <form data-ng-if="global.isAuthN" ng-submit="addIdea()">
+                  <form ng-show="global.isAuthN" ng-submit="addIdea()">
                       <textarea name="" ng-model="ideaText" class="addNewIdeaText" autofocus ></textarea>
-                      <input type="submit" class="submitIdeaButton" value="Поделиться&#10;идеей!" rel="addIdeaContainer">
+                      <input type="submit" class="submitIdeaButton" value="Поделиться&#10;идеей!">
                   </form>
               </div>
           </div>
@@ -106,7 +106,6 @@
 
   <!-- build:js(public) /js/app.min.js -->
   <script src="/js/core.js"></script>
-  <script src="/js/clamp.min.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/services/helper.js"></script>
   <script src="/js/services/auth-service.js"></script>

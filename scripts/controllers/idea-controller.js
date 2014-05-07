@@ -1,23 +1,29 @@
 'use strict';
 angular.module('tp')
-    .controller('mainController', function($scope, $rootScope, TT, ideaFactory, likeFactory, userFactory) {
+    .controller('mainController', function($scope, $rootScope, TT, ideaFactory, likeFactory) {
             $scope.tt = ideaFactory.getTechTalk();
+        console.log($scope.tt);
             $scope.ideasList = ideaFactory.getAll();
             $scope.openAddIdea=false;
 
             $scope.$on('createdTechTalk', function(e, data){
                 $scope.tt = ideaFactory.getTechTalk();
+                console.log($scope.tt);
                 $scope.ideasList = ideaFactory.getAll();
             });
             $scope.addIdea = function(){
+                console.log("A");
+                console.log($scope.ideaText);
+                console.log($rootScope.global.isAuthN);
                 if ($scope.ideaText && $rootScope.global.isAuthN) {
+                    console.log("B");
                     var idea = ideaFactory.post($scope.ideaText);
                     $scope.ideasList.push(idea);
                     $scope.ideaText='';
+                    $scope.openAddIdea=false;
                 }
             };
 
-            console.log(userFactory.getAll());
             $scope.toggleLike = function(e, index){
                 var idea = $scope.ideasList[index],
                     ind;
@@ -40,7 +46,7 @@ angular.module('tp')
                 $scope.openAddIdea=false;
             };
         })
-    .controller('commentsController', function($scope, $rootScope, $filter, commentFactory, likeFactory, $routeParams, ideaFactory) {
+    .controller('commentsController', function($scope, $rootScope, $filter, commentFactory, likeFactory, $routeParams, ideaFactory, userFactory) {
             var ideaId = $routeParams.ideaId,
                 ideas = $filter('filter')($scope.$parent.ideasList, {_id: ideaId}),
                 idea;
@@ -58,6 +64,7 @@ angular.module('tp')
                 $scope.time=date.getHours()+"."+date.getMinutes();
                 console.log($scope.date+" - "+$scope.time+ date);*/
             }
+            $scope.allUsers=userFactory.getAll();
 
             $scope.removeComment = function(index){
                 var comment = $scope.ideaWithComment.comments[index];
@@ -68,9 +75,9 @@ angular.module('tp')
             };
             $scope.createTechTalk = false;
             $scope.submitTechTalk = function(){
-
-                if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && this.date && this.location){
-                    ideaFactory.update(ideaId, 'techtalk', this.date, this.location);
+                if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && $scope.ideaWithComment.ttDate){
+                    console.log($scope.ideaWithComment);
+                    ideaFactory.update(ideaId, 'techtalk', $scope.ideaWithComment);
                     $scope.$emit('createdTechTalk');
                     window.location.href = '#/';
                 }
