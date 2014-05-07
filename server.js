@@ -164,6 +164,16 @@ app.get('/api/user/:name?', function(req, res) {
     }
 });
 
+app.get('/api/user', function(req, res) {
+    User.find(function(err, users) {
+        if (err){
+            res.json({status: 'error', error: err});
+        }else{
+            res.json(users);
+        }
+    });
+});
+
 /**
  * Techtalks
  */

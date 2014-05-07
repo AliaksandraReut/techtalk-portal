@@ -3,6 +3,9 @@ angular.module('tp.services')
     .factory('TT', function($resource){
         return $resource('/portal/api/techtalk');
     })
+    .factory('User', function($resource){
+        return $resource('/portal/api/user');
+    })
     .factory('Idea', function($resource){
         return $resource('/portal/api/ideas/:ideaId', {ideaId: '@id'}, {update: {method: "PUT"}});
     })
@@ -75,6 +78,13 @@ angular.module('tp.services')
             },
             delete: function(ideaId){
                 Like.remove({ideaId: ideaId, userId: $rootScope.global.currentUser._id});
+            }
+        };
+    })
+    .service('userFactory', function(User, $rootScope){
+        return {
+            getAll: function(){
+                return User.query();
             }
         };
     });
