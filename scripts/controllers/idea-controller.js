@@ -2,21 +2,15 @@
 angular.module('tp')
     .controller('mainController', function($scope, $rootScope, TT, ideaFactory, likeFactory) {
             $scope.tt = ideaFactory.getTechTalk();
-        console.log($scope.tt);
             $scope.ideasList = ideaFactory.getAll();
             $scope.openAddIdea=false;
 
             $scope.$on('createdTechTalk', function(e, data){
                 $scope.tt = ideaFactory.getTechTalk();
-                console.log($scope.tt);
                 $scope.ideasList = ideaFactory.getAll();
             });
             $scope.addIdea = function(){
-                console.log("A");
-                console.log($scope.ideaText);
-                console.log($rootScope.global.isAuthN);
                 if ($scope.ideaText && $rootScope.global.isAuthN) {
-                    console.log("B");
                     var idea = ideaFactory.post($scope.ideaText);
                     $scope.ideasList.push(idea);
                     $scope.ideaText='';
@@ -56,13 +50,7 @@ angular.module('tp')
                 idea.comments = commentFactory.getAll(ideaId);
                 $scope.ideaWithComment = idea;
             }else{
-                console.log($scope.$parent.tt);
                 $scope.ideaWithComment = $scope.$parent.tt;
-                /* var date=new Date($scope.$parent.tt.ttDate).toLocaleDateString();
-                $scope.date = date;
-                $scope.date=date.getDate()+"-"+date.getMonth()+"-"+date.getYear();
-                $scope.time=date.getHours()+"."+date.getMinutes();
-                console.log($scope.date+" - "+$scope.time+ date);*/
             }
             $scope.allUsers=userFactory.getAll();
 
@@ -75,14 +63,35 @@ angular.module('tp')
             };
             $scope.createTechTalk = false;
             $scope.submitTechTalk = function(){
-                if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin' && $scope.ideaWithComment.ttDate){
-                    console.log($scope.ideaWithComment);
-                    ideaFactory.update(ideaId, 'techtalk', $scope.ideaWithComment);
-                    $scope.$emit('createdTechTalk');
-                    window.location.href = '#/';
+                if( $rootScope.global.isAuthN && $rootScope.global.currentUser.role === 'admin'){
+                    if(!$scope.ideaWithComment.ttDate){
+                        $scope.dateMistake="It's necessary to chose the date";
+                        if(!$scope.ideaWithComment.ttLector)
+                        {
+                            $scope.lectorMistake="It's necessary to chose the lector";
+                        }
+                    }else{
+                        if($scope.ideaWithComment.ttLector){
+                            ideaFactory.update(ideaId, 'techtalk', $scope.ideaWithComment);
+                            $scope.$emit('createdTechTalk');
+                            window.location.href = '#/';
+                            $scope.lectorMistake=null;
+                            $scope.dateMistake=null;
+                        } else{
+                            $scope.lectorMistake="It's necessary to chose the lector";
+                        }
+                    }
+
                 }
 
             };
+            $scope.updateIdea=function(){
+                if( $rootScope.global.isAuthN){
+                    ideaFactory.update(ideaId, 'idea', $scope.ideaWithComment);
+                }
+                $scope.toUpdateIdea=false;
+            };
+
             $scope.addComment = function(){
                 if ($scope.commentText && $rootScope.global.isAuthN) {
                     var comment = commentFactory.post($scope.ideaWithComment._id, $scope.commentText);

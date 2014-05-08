@@ -534,3 +534,8 @@ input[type='submit']:hover{
 .adminPanelItem input[type="date"], .adminPanelItem input[type="time"]{
     width: 195px;
 }
+.errorClass {
+    padding: 0 40px 10px;
+    color: #e53737;
+    font-size: 14px;
+}

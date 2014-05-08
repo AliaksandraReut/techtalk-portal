@@ -32,16 +32,25 @@ angular.module('tp.services')
                 return idea;
             },
             update: function(ideaId, type, ideaWithComment){
-                console.log('createTechTalk');
+                var idea;
+                console.log(type);
+                if(type=="techtalk"){
+                    idea = Idea.update({
+                        id: ideaId,
+                        type: type,
+                        ideaText:ideaWithComment.ideaText,
+                        ttDate: new Date(ideaWithComment.ttDate),
+                        ttTime: ideaWithComment.ttTime,
+                        ttLocation: ideaWithComment.ttLocation,
+                        ttLector: ideaWithComment.ttLector._id
+                    });
+                }else{
+                    idea = Idea.update({
+                        id: ideaId,
+                        ideaText:ideaWithComment.ideaText
+                    });
+                }
 
-                var idea = Idea.update({
-                    id: ideaId,
-                    type: type,
-                    ttDate: new Date(ideaWithComment.ttDate),
-                    ttTime: ideaWithComment.ttTime,
-                    ttLocation: ideaWithComment.ttLocation,
-                    ttLector: ideaWithComment.ttLector._id
-                });
                 return idea;
             },
             getTechTalk: function(){
